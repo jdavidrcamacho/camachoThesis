@@ -44,4 +44,4 @@ plt.plot(tstar, a3, color = 'green', linestyle='dotted', linewidth=2,
 plt.ylabel('Output')
 plt.xlabel('Input')
 plt.legend(facecolor='white', framealpha=1, edgecolor='black')
-#plt.savefig('samplesPerKernel.pdf', bbox_inches='tight')
+plt.savefig('samplesPerKernel.pdf', bbox_inches='tight')

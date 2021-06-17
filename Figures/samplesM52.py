@@ -30,13 +30,13 @@ plt.plot(tstar, a1, color='blue', linestyle='solid', linewidth=2,
 kernel2 = kernels.Matern52(1, 10)
 tedibear2 = process.GP(kernel2, mean, time, val1, val1err)
 a2 = tedibear2.sample(kernel2, tstar)
-plt.plot(tstar, a2, color='red', linestyle='dotted', linewidth=2, 
+plt.plot(tstar, a2, color='red', linestyle='dashed', linewidth=2, 
          label='$\eta_2 = 10$')
 
 kernel3 = kernels.Matern52(1, 100)
 tedibear3 = process.GP(kernel3, mean, time, val1, val1err)
 a3 = tedibear3.sample(kernel3, tstar)
-plt.plot(tstar, a3, color = 'green', linestyle='dashed', linewidth=2, 
+plt.plot(tstar, a3, color = 'green', linestyle='dotted', linewidth=2, 
          label='$\eta_2 = 100$')
 plt.ylabel('Output')
 plt.xlabel('Input')
