@@ -1,5 +1,6 @@
 import numpy as np
 import matplotlib
+matplotlib.rcParams['figure.figsize'] = [7, 3]
 matplotlib.rcParams.update({
     "pgf.texsystem": "pdflatex",
     'font.family': 'serif',
@@ -16,11 +17,11 @@ import gprn as gprn
 
 ###### Data .rdb file #####
 time,rv,rverr = np.loadtxt("/home/camacho/Github/camachoThesis/sunData/sunBinned_Dumusque.txt", 
-                           skiprows = 1, unpack = True, usecols = (0,1,2))
+                           skiprows = 1, unpack = True, usecols = (0,7,8))
 val1, val1err = rv, rverr
 
-gpResults = "/home/camacho/GPRN/01_SUN/65_sun/GP/01a_GP_RV/savedProgress.h5"
-gprnResults = "/home/camacho/GPRN/01_SUN/65_sun/GPRN/01a_gprn_RV/savedProgress.h5"
+gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/02a_GP_BIS/savedProgress.h5"
+gprnResults = "/home/camacho/GPRN/01_SUN/70_sun/GPRN/02a_gprn_BIS/savedProgress.h5"
 
 gplabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", "slope",  "offset", "s"])
 gprnlabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", "$\eta_{1_1}$", 
@@ -33,8 +34,7 @@ gpthin = int(0.1 * np.min(gptau))
 gpsamples = gpsampler.get_chain(discard=gpburnin, flat=True, thin=gpthin)
 log_prob_samples = gpsampler.get_log_prob(discard=gpburnin, flat=True, thin=gpthin)
 gpCombSamples = np.concatenate((gpsamples, log_prob_samples[:, None]), axis=1)
-values = np.where((gpCombSamples[:,-1] > -800.0))
-gpCombSamples = gpCombSamples[values,:].reshape(-1, 8)
+
 
 gprnsampler = emcee.backends.HDFBackend(gprnResults)
 gprntau = gprnsampler.get_autocorr_time(tol=25)
@@ -43,22 +43,7 @@ gprnthin = int(0.1 * np.min(gprntau))
 gprnsamples = gprnsampler.get_chain(discard=gprnburnin, flat=True, thin=gprnthin)
 log_prob_samples = gprnsampler.get_log_prob(discard=gprnburnin, flat=True, thin=gprnthin)
 gprnCombSamples = np.concatenate((gprnsamples, log_prob_samples[:, None]), axis=1)
-values = np.where((gprnCombSamples[:,-1] > -850.0))
-gprnCombSamples = gprnCombSamples[values,:].reshape(-1, 10)
 
-# labels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$"])
-# corner1 = corner(gpCombSamples[:,[0,1,2,3]], labels=labels,color='blue', bins = 50,
-#                   quantiles=[0.16, 0.5, 0.84], smooth=True, smooth1d=True, 
-#                   plot_density=True, plot_contours=True,
-#                   fill_contours=True, plot_datapoints=False)
-# a = np.array([gprnCombSamples[:,0]*gprnCombSamples[:,4], gprnCombSamples[:,1], 
-#      gprnCombSamples[:,2], gprnCombSamples[:,3]]).T
-# corner2 = corner(a, 
-#                  labels=labels, color="red", bins = 50,
-#                   quantiles=[0.16, 0.5, 0.84], smooth=True, smooth1d=True,
-#                   fig=corner1,
-#                   plot_density=True, plot_contours=True,
-#                   fill_contours=True, plot_datapoints=False)
 
 ##### GP stuff
 values = np.where(gpCombSamples[:,-1] == np.max(gpCombSamples[:,-1]))
@@ -75,18 +60,19 @@ m,s,_ = tedibear.prediction(kernel, mean, tstar)
 fig, axs = plt.subplots(nrows=2,ncols=1, sharex=True, 
                         gridspec_kw={'width_ratios': [1],
                                      'height_ratios': [2.25, 1]})
-fig.set_size_inches(w=7, h=5)
+fig.set_size_inches(w=7, h=4)
 axs[0].errorbar(time, val1, val1err, fmt= '.k')
-axs[0].set_ylabel('RV (m/s)')
+axs[0].set_ylabel('BIS (m/s)')
 #axs[0].set_xlabel('Time (BJD-2400000)')
 axs[0].plot(tstar, m, '-r', alpha=0.75, label='GP')
 axs[0].fill_between(tstar,  m+s, m-s, color="red", alpha=0.25)
 
 gpvals,_,_ = tedibear. prediction(kernel, mean, time, std=False)
 gpresiduals = val1 - gpvals
-rms = np.sqrt(np.sum((gpresiduals -np.mean(gpresiduals))**2)/time.size)
+#rms = np.sqrt(np.sum((gpresiduals -np.mean(gpresiduals))**2)/time.size)
+rms = ted.utils.wrms(gpresiduals, val1err)
 axs[1].axhline(y=0, linestyle='--', color='k')
-axs[1].plot(time, gpresiduals, '*r', alpha=0.75, label='GP')
+axs[1].plot(time, gpresiduals, '*r', alpha=1, label='GP')
 
 ##### GPRN stuff
 values = np.where(gprnCombSamples[:,-1] == np.max(gprnCombSamples[:,-1]))
@@ -109,16 +95,44 @@ axs[0].legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='bla
 
 gprnvals, _ = GPRN.Prediction(nodes, weight, means, jitter, time, vm, vv, variance= True)
 gprnresiduals = val1 - gprnvals[0]
-rms = np.sqrt(np.sum((gprnresiduals - np.mean(gprnresiduals))**2)/time.size)
+#rms = np.sqrt(np.sum((gprnresiduals - np.mean(gprnresiduals))**2)/time.size)
+rms = gprn.utils.wrms(gprnresiduals, val1err)
 axs[1].set_ylabel('Residuals (m/s)')
-axs[1].plot(time, gprnresiduals, '.b', alpha=0.75, label='GPRN')
+axs[1].plot(time, gprnresiduals, '.b', mfc='none', alpha=1, label='GPRN')
 axs[1].set_xlabel('Time (BJD - 2400000)')
-axs[1].legend(loc='upper left', facecolor='white', framealpha=1, edgecolor='black')
+axs[1].legend(loc='upper left', bbox_to_anchor=(0, 0.8), 
+              facecolor='white', framealpha=1, edgecolor='black')
 plt.tight_layout()
-plt.savefig('RVfit_withResidualsPlot.pdf', bbox_inches='tight')
+plt.savefig('BISfit_withResidualsPlot.pdf', bbox_inches='tight')
 plt.close('all')
 
+ard = np.abs(gprnresiduals) - np.abs(gpresiduals)
+plt.figure()
+plt.title('Residual difference (GPRN - GP)')
+plt.plot(time, ard, '.b')
+plt.ylabel('Difference (m/s)')
+plt.xlabel('Time (BJD - 2400000)')
+plt.axhline(y=0, linestyle='--', color='k')
+plt.tight_layout()
+plt.savefig('BISfit_ResidualDifferencePlot.pdf', bbox_inches='tight')
+plt.close('all')
 
+total = 0
+totals = [0]
+for i, j in enumerate(ard):
+    if j < 0:
+        total += 1
+        totals.append(total / (i+1))
+        print(total, 'out of', i+1, 'then', total / (i+1))
+    else:
+        totals.append(totals[-1])
+plt.figure()
+plt.title('GPRN best RMS percentage')
+plt.plot(totals[1:], '.-b')
+plt.xlabel('Number of points')
+plt.ylabel('%')
+plt.savefig('BISfit_percentagePlot.pdf', bbox_inches='tight')
+plt.close('all')
 
 
 
