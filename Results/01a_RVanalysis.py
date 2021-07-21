@@ -52,6 +52,7 @@ kernel = ted.kernels.QuasiPeriodic(gpMapSample[-1,0], gpMapSample[-1,1],
          + ted.kernels.WhiteNoise(gpMapSample[-1,6])
 mean = ted.means.Linear(gpMapSample[-1,4], gpMapSample[-1,5])
 tedibear = ted.process.GP(kernel, mean, time, val1, val1err)
+
 tstar = np.linspace(time.min()-1, time.max()+1, 10000)
 m,s,_ = tedibear.prediction(kernel, mean, tstar)
 

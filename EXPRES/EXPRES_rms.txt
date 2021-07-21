@@ -1,0 +1,24 @@
+HD10700 with 174 measurements
+Timespan = 469.7396399999998 days
+Initial RMS = 1.8632756664121028 m/s
+Final RMS = 1.8181674902091296 m/s
+RMS reduction = 1.0248096924215628
+
+HD26965 with 114 measurements
+Timespan = 464.74607999999716 days
+Initial RMS = 3.1945764332615583 m/s
+Final RMS = 0.8102996426218662 m/s
+RMS reduction = 3.9424630904747135
+
+HD34411 with 188 measurements
+Timespan = 415.7486100000024 days
+Initial RMS = 1.7802233818777735 m/s
+Final RMS = 1.4262214777782016 m/s
+RMS reduction = 1.2482096291601523
+
+HD101501 with 45 measurements
+Timespan = 655.0786499999958 days
+Initial RMS = 4.887035216762464 m/s
+Final RMS = 2.1442659352559406 m/s
+RMS reduction = 2.2791180591968625
+
