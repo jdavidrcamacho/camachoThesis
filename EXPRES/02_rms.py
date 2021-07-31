@@ -11,7 +11,7 @@ plt.close('all')
 from gprn.covFunction import SquaredExponential, QuasiPeriodic
 from gprn.meanFunction import Linear
 from gprn.meanField import inference
-from tedi import utils
+from gprn import utils
 import emcee 
 
 linesize = 1
@@ -52,15 +52,27 @@ elbo, m, v = GPRN1.ELBOcalc(nodes, weight, means, jitter,
 vals, _ = GPRN1.Prediction(nodes, weight, means, jitter, time1, 
                             m, v, variance= True)
 
-rmsHD10700 = utils.rms(val1RV)
 print('HD10700 with {0} measurements'.format(time1.size))
 print('Timespan = {0} days'.format(time1.ptp()))
+print()
+rmsHD10700 = utils.rms(val1RV)
 print('Initial RMS = {0} m/s'.format(rmsHD10700))
-
 rmsHD10700final = utils.rms(val1RV - vals[0])
 print('Final RMS = {0} m/s'.format(rmsHD10700final))
 print('RMS reduction = {0}'.format(rmsHD10700/rmsHD10700final))
 print()
+
+rmsHD10700 = utils.wrms(val1RV, val1RVerr)
+print('Initial weighted RMS = {0} m/s'.format(rmsHD10700))
+rmsHD10700final = utils.wrms(val1RV - vals[0], val1RVerr)
+print('Final weighted RMS = {0} m/s'.format(rmsHD10700final))
+print('weighetd RMS reduction = {0}'.format(rmsHD10700/rmsHD10700final))
+print()
+
+f.close()
+import sys
+sys.exit(0)
+
 
 ################################################################################
 rotP26965 = 40
