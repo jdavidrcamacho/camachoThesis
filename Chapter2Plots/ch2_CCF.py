@@ -29,7 +29,7 @@ axs.hlines(y=funcHM, xmin=(1 - fwhm/2), xmax=(1 + fwhm/2),
            colors='red', ls='--', lw=2)
 axs.vlines(x=1, ymin=0.25, ymax=np.min(func), 
            colors='green', ls=':', lw=2)
-axs.vlines(x=1, ymin=np.min(func) + 0.01, ymax=1 - 0.01, 
+axs.vlines(x=1, ymin=np.min(func), ymax=1, 
            colors='blue', ls='-', lw=2)
 axs.axes.get_yaxis().set_visible(False)
 
