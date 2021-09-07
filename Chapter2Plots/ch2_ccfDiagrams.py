@@ -109,7 +109,7 @@ g1 = norm(m, std).pdf(n)
 # for ii in range(300, 451):
 #     g1[ii] = 0.5*g1[ii]
     
-firsst = np.linspace(g1[251], g1[330], 149)
+firsst = np.linspace(g1[251], g1[350], 149)
 g11 = np.concatenate((g1[0:251], firsst, g1[400:]))
 f1 = 1 - g11
 
@@ -182,5 +182,27 @@ axs[1,3].vlines(x=1, ymin=np.min(f2), ymax=1,
 x = [1, 1, -0.1, 1.9]
 y = [np.min(f1), 0.87, 0.95, 1]
 axs[1,3].plot(x, y, '-b')
+
+props = dict(boxstyle='round', facecolor='white', alpha=1.00, edgecolor='black')
+
+textstr1 = '1'
+axs[0,0].text(0.06, 0.94, textstr1, transform=axs[0,0].transAxes, fontsize=10,
+        verticalalignment='top', bbox=props)
+
+textstr2 = '2'
+axs[0,1].text(0.06, 0.94, textstr2, transform=axs[0,1].transAxes, fontsize=10,
+        verticalalignment='top', bbox=props)
+
+textstr3 = '3'
+axs[0,2].text(0.06, 0.94, textstr3, transform=axs[0,2].transAxes, fontsize=10,
+        verticalalignment='top', bbox=props)
+
+textstr4 = '4'
+axs[0,3].text(0.06, 0.94, textstr4, transform=axs[0,3].transAxes, fontsize=10,
+        verticalalignment='top', bbox=props)
+
+textstr5 = '5'
+axs[0,4].text(0.06, 0.94, textstr5, transform=axs[0,4].transAxes, fontsize=10,
+        verticalalignment='top', bbox=props)
 
 plt.savefig('ccfDiagrams.pdf', bbox_inches='tight')
