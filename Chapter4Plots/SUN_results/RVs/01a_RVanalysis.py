@@ -10,18 +10,17 @@ import matplotlib.pylab as plt
 plt.close('all')
 
 import emcee
-from corner import corner
 
 import tedi as ted
 import gprn as gprn
 
 ###### Data .rdb file #####
-time,rv,rverr = np.loadtxt("/home/camacho/Github/camachoThesis/SUNperiodograms/sunBinned_Dumusque.txt", 
-                           skiprows = 1, unpack = True, usecols = (0,7,8))
+time,rv,rverr = np.loadtxt("/home/camacho/Github/camachoThesis/Chapter4Plots/SUN_periodograms/sunBinned_Dumusque.txt", 
+                           skiprows = 1, unpack = True, usecols = (0,1,2))
 val1, val1err = rv, rverr
 
-gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/02a_GP_BIS/savedProgress.h5"
-gprnResults = "/home/camacho/GPRN/01_SUN/70_sun/GPRN/02a_gprn_BIS/savedProgress.h5"
+gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/01a_GP_RV/savedProgress.h5"
+gprnResults = "/home/camacho/GPRN/01_SUN/70_sun/GPRN/01a_gprn_RV/savedProgress.h5"
 
 gplabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", "slope",  "offset", "s"])
 gprnlabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", "$\eta_{1_1}$", 
@@ -35,7 +34,6 @@ gpsamples = gpsampler.get_chain(discard=gpburnin, flat=True, thin=gpthin)
 log_prob_samples = gpsampler.get_log_prob(discard=gpburnin, flat=True, thin=gpthin)
 gpCombSamples = np.concatenate((gpsamples, log_prob_samples[:, None]), axis=1)
 
-
 gprnsampler = emcee.backends.HDFBackend(gprnResults)
 gprntau = gprnsampler.get_autocorr_time(tol=25)
 gprnburnin = int(2*np.max(gprntau))
@@ -43,7 +41,6 @@ gprnthin = int(0.1 * np.min(gprntau))
 gprnsamples = gprnsampler.get_chain(discard=gprnburnin, flat=True, thin=gprnthin)
 log_prob_samples = gprnsampler.get_log_prob(discard=gprnburnin, flat=True, thin=gprnthin)
 gprnCombSamples = np.concatenate((gprnsamples, log_prob_samples[:, None]), axis=1)
-
 
 ##### GP stuff
 values = np.where(gpCombSamples[:,-1] == np.max(gpCombSamples[:,-1]))
@@ -57,22 +54,29 @@ tedibear = ted.process.GP(kernel, mean, time, val1, val1err)
 
 tstar = np.linspace(time.min()-10, time.max()+10, 5000)
 tstar = np.sort(np.concatenate((tstar, time)))
-m,s,_ = tedibear.prediction(kernel, mean, tstar)
+a, b, c = tedibear.prediction(kernel, mean, tstar)
+bmin, bmax = a - b, a + b
 
 fig, axs = plt.subplots(nrows=2,ncols=1, sharex=True, 
                         gridspec_kw={'width_ratios': [1],
                                      'height_ratios': [2.25, 1]})
 fig.set_size_inches(w=7, h=4)
 axs[0].errorbar(time, val1, val1err, fmt= '.k')
-axs[0].set_ylabel('BIS (m/s)')
-#axs[0].set_xlabel('Time (BJD-2400000)')
-axs[0].plot(tstar, m, '-r', alpha=0.75, label='GP')
-axs[0].fill_between(tstar,  m+s, m-s, color="red", alpha=0.25)
+axs[0].set_ylabel('RV (m/s)')
+axs[0].plot(tstar, a, '-r', alpha=0.75, label='GP')
+axs[0].fill_between(tstar,  bmax.T, bmin.T, color="red", alpha=0.25)
 
-gpvals,_,_ = tedibear. prediction(kernel, mean, time, std=False)
-gpresiduals = val1 - gpvals
-#rms = np.sqrt(np.sum((gpresiduals -np.mean(gpresiduals))**2)/time.size)
-rms = ted.utils.wrms(gpresiduals, val1err)
+values = []
+for i, j in enumerate(time):
+    posVal = np.where(c == j)
+    values.append(int(posVal[0]))
+val1Pred = []
+for i, j in enumerate(values):
+    val1Pred.append(a[j])
+gpresiduals = val1 - np.array(val1Pred)
+
+from tedi import utils
+rms = utils.wrms(gpresiduals, val1err)
 axs[1].axhline(y=0, linestyle='--', color='k')
 axs[1].plot(time, gpresiduals, '*r', alpha=1, label='GP')
 
@@ -93,6 +97,7 @@ tstar = np.sort(np.concatenate((tstar, time)))
 a, b, c = GPRN.Prediction(nodes, weight, means, jitter, tstar, m, v, 
                           variance=True)
 bmin, bmax = a-np.sqrt(b), a+np.sqrt(b)
+
 axs[0].plot(tstar, a[0].T, '--b', alpha=0.75, label='GPRN')
 axs[0].fill_between(tstar,  bmax[0].T, bmin[0].T, color="blue", alpha=0.25)
 axs[0].legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='black')
@@ -109,13 +114,14 @@ gprnresiduals = val1 - np.array(val1Pred)
 from gprn import utils
 rms = utils.wrms(gprnresiduals, val1err)
 
+
 axs[1].set_ylabel('Residuals (m/s)')
 axs[1].plot(time, gprnresiduals, '.b', mfc='none', alpha=1, label='GPRN')
 axs[1].set_xlabel('Time (BJD - 2400000)')
 axs[1].legend(loc='upper left', bbox_to_anchor=(0, 0.8), 
               facecolor='white', framealpha=1, edgecolor='black')
 plt.tight_layout()
-plt.savefig('BISfit_withResidualsPlot.pdf', bbox_inches='tight')
+plt.savefig('RVfit_withResidualsPlot.pdf', bbox_inches='tight')
 plt.close('all')
 
 #ard = np.abs(gprnresiduals) - np.abs(gpresiduals)
@@ -126,7 +132,7 @@ plt.close('all')
 #plt.xlabel('Time (BJD - 2400000)')
 #plt.axhline(y=0, linestyle='--', color='k')
 #plt.tight_layout()
-#plt.savefig('BISfit_ResidualDifferencePlot.pdf', bbox_inches='tight')
+#plt.savefig('RVfit_ResidualDifferencePlot.pdf', bbox_inches='tight')
 #plt.close('all')
 
 #total = 0
@@ -143,10 +149,6 @@ plt.close('all')
 #plt.plot(totals[1:], '.-b')
 #plt.xlabel('Number of points')
 #plt.ylabel('%')
-#plt.savefig('BISfit_percentagePlot.pdf', bbox_inches='tight')
+#plt.savefig('RVfit_percentagePlot.pdf', bbox_inches='tight')
 #plt.close('all')
-
-
-
-
 

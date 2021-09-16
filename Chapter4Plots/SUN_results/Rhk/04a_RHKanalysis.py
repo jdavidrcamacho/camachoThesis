@@ -15,7 +15,7 @@ import tedi as ted
 import gprn as gprn
 
 ###### Data .rdb file #####
-time,rv,rverr = np.loadtxt("/home/camacho/Github/camachoThesis/SUNperiodograms/sunBinned_Dumusque.txt", 
+time,rv,rverr = np.loadtxt("/home/camacho/Github/camachoThesis/Chapter4Plots/SUN_periodograms/sunBinned_Dumusque.txt", 
                            skiprows = 1, unpack = True, usecols = (0,3,4))
 val1, val1err = rv, rverr
 
@@ -54,7 +54,8 @@ tedibear = ted.process.GP(kernel, mean, time, val1, val1err)
 
 tstar = np.linspace(time.min()-10, time.max()+10, 5000)
 tstar = np.sort(np.concatenate((tstar, time)))
-m,s,_ = tedibear.prediction(kernel, mean, tstar)
+a, b, c = tedibear.prediction(kernel, mean, tstar)
+bmin, bmax = a - b, a + b
 
 fig, axs = plt.subplots(nrows=2,ncols=1, sharex=True, 
                         gridspec_kw={'width_ratios': [1],
@@ -62,14 +63,23 @@ fig, axs = plt.subplots(nrows=2,ncols=1, sharex=True,
 fig.set_size_inches(w=7, h=4)
 axs[0].errorbar(time, val1, val1err, fmt= '.k')
 axs[0].set_ylabel('$\log R^{\'}_{hk}$')
-axs[0].plot(tstar, m, '-r', alpha=0.75, label='GP')
-axs[0].fill_between(tstar,  m+s, m-s, color="red", alpha=0.25)
+axs[0].plot(tstar, a, '-r', alpha=0.75, label='GP')
+axs[0].fill_between(tstar,  bmax.T, bmin.T, color="red", alpha=0.25)
 
-gpvals,_,_ = tedibear. prediction(kernel, mean, time, std=False)
-gpresiduals = val1 - gpvals
-rms = ted.utils.wrms(gpresiduals, val1err)
+values = []
+for i, j in enumerate(time):
+    posVal = np.where(c == j)
+    values.append(int(posVal[0]))
+val1Pred = []
+for i, j in enumerate(values):
+    val1Pred.append(a[j])
+gpresiduals = val1 - np.array(val1Pred)
+
+from tedi import utils
+rms = utils.wrms(gpresiduals, val1err)
 axs[1].axhline(y=0, linestyle='--', color='k')
 axs[1].plot(time, gpresiduals, '*r', alpha=1, label='GP')
+
 
 ##### GPRN stuff
 values = np.where(gprnCombSamples[:,-1] == np.max(gprnCombSamples[:,-1]))
@@ -88,6 +98,7 @@ tstar = np.sort(np.concatenate((tstar, time)))
 a, b, c = GPRN.Prediction(nodes, weight, means, jitter, tstar, m, v, 
                           variance=True)
 bmin, bmax = a-np.sqrt(b), a+np.sqrt(b)
+
 axs[0].plot(tstar, a[0].T, '--b', alpha=0.75, label='GPRN')
 axs[0].fill_between(tstar,  bmax[0].T, bmin[0].T, color="blue", alpha=0.25)
 axs[0].legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='black')
@@ -103,7 +114,6 @@ gprnresiduals = val1 - np.array(val1Pred)
 
 from gprn import utils
 rms = utils.wrms(gprnresiduals, val1err)
-
 axs[1].set_ylabel('Residuals')
 axs[1].plot(time, gprnresiduals, '.b', mfc='none', alpha=1, label='GPRN')
 axs[1].set_xlabel('Time (BJD - 2400000)')
