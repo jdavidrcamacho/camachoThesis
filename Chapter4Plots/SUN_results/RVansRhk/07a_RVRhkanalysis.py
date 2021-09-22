@@ -15,12 +15,12 @@ from artgpn.arttwo import network
 import artgpn as art
 import gprn as gprn
 
-time,rv,rverr,rhk,rhkerr= np.loadtxt("/home/camacho/Github/camachoThesis/SUNperiodograms/sunBinned_Dumusque.txt", 
+time,rv,rverr,rhk,rhkerr= np.loadtxt("/home/camacho/Github/camachoThesis/Chapter4Plots/SUN_periodograms/sunBinned_Dumusque.txt", 
                                      skiprows = 1,  unpack = True, usecols = (0,1,2,3,4))
 time, val1, val1err = time, rv, rverr
 val2, val2err = rhk, rhkerr
 
-gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/07b_GP_RVsRhk/savedProgress.h5"
+gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/07d_GP_RVsRhk/savedProgress.h5"
 gprnResults = "/home/camacho/GPRN/01_SUN/70_sun/GPRN/07a_gprn_RVsRhk/savedProgress.h5"
 
 gplabels = np.array(["$\eta_2$", "$\eta_3$", "$\eta_4$", "$\eta_11$", "$\eta_12$",
@@ -51,8 +51,8 @@ gpMapSample = gpCombSamples[values,:].reshape(-1, 12)
 
 #Having a solution from our MCMC we need to redefine all the network
 nodes = [art.node.QuasiPeriodic(gpMapSample[-1,0], gpMapSample[-1,1], gpMapSample[-1,2])]
-weights = [art.weight.Constant(gpMapSample[-1,3]),
-           art.weight.Constant(gpMapSample[-1,4])]
+weights = [art.weight.Constant(gpMapSample[-1,3]**2),
+           art.weight.Constant(gpMapSample[-1,4]**2)]
 means = [art.mean.Linear(gpMapSample[-1,5], gpMapSample[-1,6]),
          art.mean.Linear(gpMapSample[-1,7], gpMapSample[-1,8])]
 jitters = [gpMapSample[-1,9], gpMapSample[-1,10]]
@@ -62,9 +62,10 @@ tstar = np.linspace(time.min()-10, time.max()+10, 5000)
 tstar = np.sort(np.concatenate((tstar, time)))
 
 mu11, std11, cov11 = GPnet.prediction(nodes = nodes, weights = weights, means = means,
-                                      jitters = jitters,time = tstar, dataset = 1)
+                                      jitters = jitters, time = tstar, dataset = 1)
 mu22, std22, cov22 = GPnet.prediction(nodes = nodes, weights = weights, means = means,
                                       jitters = jitters, time = tstar, dataset = 2)
+
 fig, axs = plt.subplots(nrows=4,ncols=1, sharex=True,
                         gridspec_kw={'width_ratios': [1],
                                      'height_ratios': [2.25, 1, 2.25, 1]})
@@ -78,12 +79,23 @@ axs[2].plot(tstar, mu22, '-r', alpha=0.75, label='GP')
 axs[2].errorbar(time,val2, val2err, fmt = "k.")
 axs[2].set_ylabel("log Rhk")
 
-vals1, _, _ = GPnet.prediction(nodes = nodes, weights = weights, means = means,
-                              jitters = jitters,time = time, dataset = 1)
-gpresiduals1 = val1 - vals1
-vals2, _, _ = GPnet.prediction(nodes = nodes, weights = weights, means = means,
-                              jitters = jitters,time = time, dataset = 2)
-gpresiduals2 = val2 - vals2
+values = []
+for i, j in enumerate(time):
+    posVal = np.where(cov11 == j)
+    values.append(int(posVal[0]))
+val1Pred = []
+for i, j in enumerate(values):
+    val1Pred.append(mu11[j])
+gpresiduals1 = val1 - np.array(val1Pred)
+
+values = []
+for i, j in enumerate(time):
+    posVal = np.where(cov22 == j)
+    values.append(int(posVal[0]))
+val2Pred = []
+for i, j in enumerate(values):
+    val2Pred.append(mu22[j])
+gpresiduals2 = val2 - np.array(val2Pred)
 
 axs[1].axhline(y=0, linestyle='--', color='k')
 axs[1].plot(time, gpresiduals1, '*r', alpha=1, label='GP')
@@ -105,8 +117,6 @@ means = [gprn.meanFunction.Linear(gprnMapSample[-1,8], gprnMapSample[-1,9]),
          gprn.meanFunction.Linear(gprnMapSample[-1,10], gprnMapSample[-1,11])]
 jitter = [gprnMapSample[-1,12], gprnMapSample[-1,13]]
 GPRN = gprn.meanField.inference(1, time, val1, val1err, val2, val2err)
-elbo, vm, vv = GPRN.ELBOcalc(nodes, weight, means, jitter, iterations = 5000,
-                             mu='init', var='init')
 
 elbo, m, v = GPRN.ELBOcalc(nodes, weight, means, jitter, 
                               iterations = 50000, mu='init', var='init')
@@ -141,7 +151,7 @@ axs[0].legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='bla
 axs[2].plot(tstar, a[1].T, '--b', alpha=0.75, label='GPRN')
 axs[2].fill_between(tstar,  bmax2.T, bmin2.T, color="blue", alpha=0.25)
 axs[2].legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='black')
-axs[2].set_xlabel('Time (BJD - 2400000)')
+axs[3].set_xlabel('Time (BJD - 2400000)')
 
 axs[1].axhline(y=0, linestyle='--', color='k')
 axs[1].plot(time, gprnresiduals1, '.b', mfc='none', alpha=1, label='GPRN')

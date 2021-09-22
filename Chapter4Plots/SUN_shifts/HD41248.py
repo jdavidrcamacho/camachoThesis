@@ -6,14 +6,14 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
-plt.close('all')
+#plt.close('all')
 
 ###### Data .rdb file #####
 time,rv,rverr,fw,bis = np.loadtxt("table1.dat", skiprows = 0,
                               unpack = True, usecols = (0,1,2,3,4))
-val1, val1err = 1000*rv, 1*rverr
+val1, val1err = 1*(rv-rv.mean()), rverr
 val2, val2err = bis, 2.0*val1err
-val3, val3err = 1000*fw, 2.35*val1err
+val3, val3err = 1*(fw-fw.mean()), 2.35*val1err
 
 from scipy import signal
 val11 = val1 - np.mean(val1)

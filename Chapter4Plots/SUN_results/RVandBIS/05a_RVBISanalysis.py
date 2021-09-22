@@ -15,7 +15,7 @@ from artgpn.arttwo import network
 import artgpn as art
 import gprn as gprn
 
-time,rv,rverr,bis,biserr= np.loadtxt("/home/camacho/Github/camachoThesis/SUNperiodograms/sunBinned_Dumusque.txt", 
+time,rv,rverr,bis,biserr= np.loadtxt("/home/camacho/Github/camachoThesis/Chapter4Plots/SUN_periodograms/sunBinned_Dumusque.txt", 
                                      skiprows = 1,  unpack = True, usecols = (0,1,2,7,8))
 time, val1, val1err = time, rv, rverr
 val2, val2err = bis, biserr
@@ -51,8 +51,8 @@ gpMapSample = gpCombSamples[values,:].reshape(-1, 12)
 
 #Having a solution from our MCMC we need to redefine all the network
 nodes = [art.node.QuasiPeriodic(gpMapSample[-1,0], gpMapSample[-1,1], gpMapSample[-1,2])]
-weights = [art.weight.Constant(gpMapSample[-1,3]),
-           art.weight.Constant(gpMapSample[-1,4])]
+weights = [art.weight.Constant(gpMapSample[-1,3]**2),
+           art.weight.Constant(gpMapSample[-1,4]**2)]
 means = [art.mean.Linear(gpMapSample[-1,5], gpMapSample[-1,6]),
          art.mean.Linear(gpMapSample[-1,7], gpMapSample[-1,8])]
 jitters = [gpMapSample[-1,9], gpMapSample[-1,10]]
@@ -78,12 +78,23 @@ axs[2].plot(tstar, mu22, '-r', alpha=0.75, label='GP')
 axs[2].errorbar(time,val2, val2err, fmt = "k.")
 axs[2].set_ylabel("BIS (m/s)")
 
-vals1, _, _ = GPnet.prediction(nodes = nodes, weights = weights, means = means,
-                              jitters = jitters,time = time, dataset = 1)
-gpresiduals1 = val1 - vals1
-vals2, _, _ = GPnet.prediction(nodes = nodes, weights = weights, means = means,
-                              jitters = jitters,time = time, dataset = 2)
-gpresiduals2 = val2 - vals2
+values = []
+for i, j in enumerate(time):
+    posVal = np.where(cov11 == j)
+    values.append(int(posVal[0]))
+val1Pred = []
+for i, j in enumerate(values):
+    val1Pred.append(mu11[j])
+gpresiduals1 = val1 - np.array(val1Pred)
+
+values = []
+for i, j in enumerate(time):
+    posVal = np.where(cov22 == j)
+    values.append(int(posVal[0]))
+val2Pred = []
+for i, j in enumerate(values):
+    val2Pred.append(mu22[j])
+gpresiduals2 = val2 - np.array(val2Pred)
 
 axs[1].axhline(y=0, linestyle='--', color='k')
 axs[1].plot(time, gpresiduals1, '*r', alpha=1, label='GP')
@@ -142,7 +153,7 @@ axs[0].legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='bla
 axs[2].plot(tstar, a[1].T, '--b', alpha=0.75, label='GPRN')
 axs[2].fill_between(tstar,  bmax2.T, bmin2.T, color="blue", alpha=0.25)
 axs[2].legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='black')
-axs[2].set_xlabel('Time (BJD - 2400000)')
+axs[3].set_xlabel('Time (BJD - 2400000)')
 
 
 axs[1].axhline(y=0, linestyle='--', color='k')
