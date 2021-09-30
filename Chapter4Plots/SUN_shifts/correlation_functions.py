@@ -201,7 +201,7 @@ def DCF_EK(t, y1, y2, dy1, dy2, bins=20):
     e1 = dy1.mean()
     e2 = dy2.mean()
     UDCF = ((y1 - mu1) * (y2 - mu2)[:, None]\
-            / np.sqrt((sigma1**2 - e1**2) * (sigma2**2 - e2**2)))
+            / np.sqrt(np.abs(sigma1**2 - e1**2) * np.abs(sigma2**2 - e2**2)))
 
     # determine binning
     bins = np.asarray(bins)

@@ -48,7 +48,7 @@ plt.savefig('periodogram_HD10700.pdf', bbox_inches='tight')
 plt.close('all')
 
 ################################################################################
-rotP26965 = 37.1
+rotP26965 = 40
 data = np.loadtxt("26965_activity.csv",delimiter=',', skiprows=1, usecols=(1,4,5,11,12))
 time2 = data[:,0].T
 val2RV, val2RVerr = data[:,1].T, data[:,2].T

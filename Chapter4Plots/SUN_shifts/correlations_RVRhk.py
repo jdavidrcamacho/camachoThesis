@@ -16,14 +16,15 @@ time,rv,rverr,rhk,rhkerr,bis,biserr,fw,fwerr = np.loadtxt("/home/camacho/GPRN/Da
                                                           unpack = True, 
                                                           usecols = (0,1,2,3,4,7,8,9,10))
 val1, val1err = rv, rverr
-val2, val2err = fw, fwerr
+val2, val2err = rhk, rhkerr
+
 val11err = np.mean(val1err) #* np.ones_like(val1)
 val22err = np.mean(val2err) #* np.ones_like(val2)
 
 from correlation_functions import DCF_EK
 
-gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/06d_GP_RVsFWHM/savedProgress.h5"
-gprnResults = "/home/camacho/GPRN/01_SUN/70_sun/GPRN/06a_gprn_RVsFW/savedProgress.h5"
+gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/07d_GP_RVsRhk/savedProgress.h5"
+gprnResults = "/home/camacho/GPRN/01_SUN/70_sun/GPRN/07a_gprn_RVsRhk/savedProgress.h5"
 
 gpsampler = emcee.backends.HDFBackend(gpResults)
 gptau = gpsampler.get_autocorr_time(tol=0)
@@ -68,7 +69,6 @@ bmin2, bmax2 = a2 - b2, a2 + b2
 val11 = a1 - means[0](tstar)
 val22 = a2 - means[1](tstar)
 
-
 EKbins1 = np.linspace(-30, 30, 61)
 C_EK1, C_EK_err1, bins1 = DCF_EK(tstar, val11, val22, val11err, val22err, 
                                  bins=EKbins1)
@@ -112,7 +112,6 @@ C_EK3, C_EK_err3, bins3 = DCF_EK(time, val1 - np.mean(val1), val2 - np.mean(val2
 t_EK3 = 0.5 * (bins3[1:] + bins3[:-1])
 m3 = ~np.isnan(C_EK3)
 
-
 ################################################################################
 val11 = a1 - means[0](tstar)
 val11 = val11/mapSample[-1,3]
@@ -133,7 +132,7 @@ axs = fig.subplot_mosaic([['GP', '.'],
                                       'height_ratios': [1, 10, 10,1]})
 
 axs['GP'].plot(tstar, val11, '-b', label = 'RV', linewidth=1)
-axs['GP'].plot(tstar, val22, '--r', label = 'FWHM', linewidth=1)
+axs['GP'].plot(tstar, val22, '--r', label = '$\log R^{\'}_{hk}$', linewidth=1)
 axs['GP'].set(xlabel='Time (BJD-2400000)', ylabel='Normalized\nGP predictive')
 axs['GP'].tick_params(axis='both', which='both', labelbottom=True)
 axs['GP'].legend(loc='upper left', facecolor='white', framealpha=1, edgecolor='black')
@@ -148,14 +147,13 @@ axs['LAG'].set_xlim(-30, 30)
 axs['LAG'].set_ylabel('Cross-correlated signal')
 axs['LAG'].set_xlabel('Lag')
 axs['LAG'].tick_params(axis='both', which='both', labelbottom=True)
-
+axs['LAG'].set_ylim(-0.3, 1)
 axs['GPRN'].plot(tstar, val111, '-b', label = 'RV', linewidth=1)
-axs['GPRN'].plot(tstar, val222, '--r', label = 'FWHM', linewidth=1)
+axs['GPRN'].plot(tstar, val222, '--r', label = '$\log R^{\'}_{hk}$', linewidth=1)
 axs['GPRN'].set(xlabel='Time (BJD-2400000)', ylabel='Normalized\nGPRN predictive')
 axs['GPRN'].tick_params(axis='both', which='both', labelbottom=True)
 axs['GPRN'].legend(loc='upper left', facecolor='white', framealpha=1, edgecolor='black')
 
-axs['LAG'].set_ylim(-0.3, 1)
 axs['LAG'].plot(t_EK2[m2], C_EK2[m2], ':k', label = 'GPRN')
 axs['LAG'].set_ylabel('Cross-correlated signal')
 axs['LAG'].set_xlabel('Lag (days)')
@@ -164,6 +162,7 @@ axs['LAG'].legend(loc='lower center', bbox_to_anchor=(0., 1, 1, 1),
                   facecolor='white', framealpha=1, edgecolor='black')
 # axs['LAG'].plot(t_EK3[m3], C_EK3[m3], ':k', label = 'GPRN')
 print (t_EK1[m1][np.where((C_EK1[m1] == np.max(C_EK1[m1])))])
+
 axs['GPRN'].xaxis.set_minor_locator(AutoMinorLocator(5))
 axs['GPRN'].yaxis.set_minor_locator(AutoMinorLocator(5))
 axs['GPRN'].grid(which='major', alpha=0.5)
@@ -173,5 +172,5 @@ axs['GP'].yaxis.set_minor_locator(AutoMinorLocator(5))
 axs['GP'].grid(which='major', alpha=0.5)
 axs['GP'].grid(which='minor', alpha=0.2)
 plt.tight_layout()
-fig.savefig('LAG_RVandFWHM.pdf', bbox_inches='tight')
+fig.savefig('LAG_RVandlogRhk.pdf', bbox_inches='tight')
 plt.close('all')

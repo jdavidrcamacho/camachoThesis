@@ -70,7 +70,8 @@ bmin2, bmax2 = a2 - b2, a2 + b2
 
 val11 = a1 - means[0](tstar)
 val22 = a2 - means[1](tstar)
-EKbins1 = np.linspace(-15, 15, 31)
+
+EKbins1 = np.linspace(-30, 30, 61)
 C_EK1, C_EK_err1, bins1 = DCF_EK(tstar, val11, val22, val11err, val22err, 
                                  bins=EKbins1)
 t_EK1 = 0.5 * (bins1[1:] + bins1[:-1])
@@ -99,54 +100,84 @@ a, b, c = GPRN.Prediction(nodes, weight, means, jitter, tstar, m, v,
 
 val111 = a[0].T - means[0](tstar)
 val222 = a[1].T - means[1](tstar)
-EKbins2 = np.linspace(-15, 15, 31)
+
+EKbins2 = np.linspace(-30, 30, 61)
 C_EK2, C_EK_err2, bins2 = DCF_EK(tstar, val111, val222, val11err, val22err, 
                                  bins=EKbins2)
 t_EK2 = 0.5 * (bins2[1:] + bins2[:-1])
 m2 = ~np.isnan(C_EK2)
 
-################################################################################
 
-fig = plt.figure(constrained_layout=True, figsize=(7, 4))
+EKbins3 = np.linspace(-30, 30, 61)
+C_EK3, C_EK_err3, bins3 = DCF_EK(time, val1 - np.mean(val1), val2 - np.mean(val2), 
+                                 val11err, val22err, 
+                                 bins=EKbins3)
+t_EK3 = 0.5 * (bins3[1:] + bins3[:-1])
+m3 = ~np.isnan(C_EK3)
+
+
+
+################################################################################
+val11 = a1 - means[0](tstar)
+val11 = val11/mapSample[-1,3]
+val22 = a2 - means[1](tstar)
+val22 = val22/mapSample[-1,4]
+
+val111 = a[0].T - means[0](tstar)
+val111 = val111/(opt_samples[-1,0]*opt_samples[-1,4])
+val222 = a[1].T - means[1](tstar)
+val222 = val222/(opt_samples[-1,0]*opt_samples[-1,6])
+
+fig = plt.figure(constrained_layout=True, figsize=(7, 3))
 axs = fig.subplot_mosaic([['GP', '.'],
                           ['GP', 'LAG'],
                           ['GPRN', 'LAG'],
                           ['GPRN', '.'],],
-                         gridspec_kw={'width_ratios': [3, 1],
-                                      'height_ratios': [1, 3, 3,1]})
+                         gridspec_kw={'width_ratios': [4, 1],
+                                      'height_ratios': [1, 10, 10,1]})
 
 axs['GP'].plot(tstar, val11, '-b', label = 'RV', linewidth=1)
 axs['GP'].plot(tstar, val22, '--r', label = 'BIS', linewidth=1)
-axs['GP'].set(xlabel='Time (BJD-2400000)', ylabel='GP predictive (m/s)')
+axs['GP'].set(xlabel='Time (BJD-2400000)', ylabel='Normalized\nGP predictive')
 axs['GP'].tick_params(axis='both', which='both', labelbottom=True)
-axs['GP'].legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='black')
+axs['GP'].legend(loc='upper left', facecolor='white', framealpha=1, edgecolor='black')
+axs['LAG'].axvline(x=0, linestyle='-', color='gray')
 
 axs['LAG'].xaxis.set_minor_locator(AutoMinorLocator(5))
 axs['LAG'].yaxis.set_minor_locator(AutoMinorLocator(5))
 axs['LAG'].grid(which='major', alpha=0.5)
 axs['LAG'].grid(which='minor', alpha=0.2)
-axs['LAG'].plot(t_EK1[m1], C_EK1[m1], '-k', label = 'GP')
-axs['LAG'].axvline(x=0, linestyle=':', color='gray')
-axs['LAG'].set_xlim(-15, 15)
+axs['LAG'].plot(t_EK1[m1], C_EK1[m1], '-.k', label = 'GP')
+axs['LAG'].set_xlim(-30, 30)
 axs['LAG'].set_ylabel('Cross-correlated signal')
 axs['LAG'].set_xlabel('Lag')
 axs['LAG'].tick_params(axis='both', which='both', labelbottom=True)
+axs['LAG'].set_ylim(-0.3, 1)
 
 axs['GPRN'].plot(tstar, val111, '-b', label = 'RV', linewidth=1)
 axs['GPRN'].plot(tstar, val222, '--r', label = 'BIS', linewidth=1)
-axs['GPRN'].set(xlabel='Time (BJD-2400000)', ylabel='GPRN predictive (m/s)')
+axs['GPRN'].set(xlabel='Time (BJD-2400000)', ylabel='Normalized\nGPRN predictive')
 axs['GPRN'].tick_params(axis='both', which='both', labelbottom=True)
-axs['GPRN'].legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='black')
+axs['GPRN'].legend(loc='upper left', facecolor='white', framealpha=1, edgecolor='black')
 
-axs['LAG'].plot(t_EK2[m2], C_EK2[m2], '--k', label = 'GPRN')
-axs['LAG'].axvline(x=0, linestyle=':', color='gray')
-axs['LAG'].set_xlim(-15, 15)
+axs['LAG'].plot(t_EK2[m2], C_EK2[m2], ':k', label = 'GPRN')
 axs['LAG'].set_ylabel('Cross-correlated signal')
 axs['LAG'].set_xlabel('Lag (days)')
 axs['LAG'].tick_params(axis='both', which='both', labelbottom=True)
 axs['LAG'].legend(loc='lower center', bbox_to_anchor=(0., 1, 1, 1),
                   facecolor='white', framealpha=1, edgecolor='black')
 
+# axs['LAG'].plot(t_EK3[m3], C_EK3[m3], ':k', label = 'GPRN')
+print (t_EK1[m1][np.where((C_EK1[m1] == np.max(C_EK1[m1])))])
+
+axs['GPRN'].xaxis.set_minor_locator(AutoMinorLocator(5))
+axs['GPRN'].yaxis.set_minor_locator(AutoMinorLocator(5))
+axs['GPRN'].grid(which='major', alpha=0.5)
+axs['GPRN'].grid(which='minor', alpha=0.2)
+axs['GP'].xaxis.set_minor_locator(AutoMinorLocator(5))
+axs['GP'].yaxis.set_minor_locator(AutoMinorLocator(5))
+axs['GP'].grid(which='major', alpha=0.5)
+axs['GP'].grid(which='minor', alpha=0.2)
 plt.tight_layout()
 fig.savefig('LAG_RVandBIS.pdf', bbox_inches='tight')
-# plt.close('all')
+plt.close('all')

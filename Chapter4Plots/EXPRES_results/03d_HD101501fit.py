@@ -25,7 +25,7 @@ GPRN1 = inference(1, time1, val1RV, val1RVerr, val1FW, val1FWerr)
 
 tstar = np.linspace(time1.min()-10, time1.max()+10, 10000)
 
-filename = "/home/camacho/GPRN/02_EXPRES/New/HD101501/HD101501_RVsFW/savedProgress.h5"
+filename = "/home/camacho/GPRN/02_EXPRES/New/HD101501/01a_GPRN_RVsFW/savedProgress.h5"
 sampler = emcee.backends.HDFBackend(filename)
 #autocorrelation
 tau = sampler.get_autocorr_time(tol=0)
@@ -67,19 +67,35 @@ aa, bb, cc = GPRN.Prediction(nodes, weight, means, jitter, tstar, m, v,
 fig = plt.figure(constrained_layout=True, figsize=(7, 4))
 axs = fig.subplot_mosaic(
     [
-        ['predictive', 'node'],
-        ['predictive', 'weight'],
+        ['weight 1', 'predictive 1'],
+        ['weight 1', 'predictive 1'],
+        ['node', 'predictive 1'],
+        ['node', 'predictive 2'],
+        ['weight 2', 'predictive 2'],
+        ['weight 2', 'predictive 2'],
     ],
 )
-axs['predictive'].set(xlabel='Time (MJD)', ylabel='RV (m/s)')
-axs['predictive'].errorbar(time1, val1RV, val1RVerr, fmt= '.k')
-axs['predictive'].plot(tstar, a[0].T, '-r')
-axs['predictive'].fill_between(tstar,  bmax1.T, bmin1.T, color="red", alpha=0.25)
+
+axs['weight 1'].set(xlabel='', ylabel='$Weight_1$ (m/s)')
+axs['weight 1'].plot(tstar, bb[1,0].T, '-b')
+axs['weight 1'].tick_params(axis='both', which='both', labelbottom=False)
 axs['node'].set(xlabel='', ylabel='Node')
 axs['node'].plot(tstar, bb[0,0].T, '-b')
 axs['node'].tick_params(axis='both', which='both', labelbottom=False)
-axs['weight'].set(xlabel='Time (MJD)', ylabel='Weight (m/s)')
-axs['weight'].plot(tstar, bb[1,0].T, '-b')
+axs['weight 2'].plot(tstar, bb[1,1].T, '-b')
+axs['weight 2'].set(xlabel='Time (BJD - 2450000)', ylabel=' $Weight_2$ (m/s)')
+
+axs['predictive 1'].set(xlabel='', ylabel='RV (m/s)')
+axs['predictive 1'].plot(time1, val1RV, '.k')
+axs['predictive 1'].fill_between(tstar,  bmax1.T, bmin1.T, color="red", alpha=0.25)
+axs['predictive 1'].plot(tstar, a[0].T, '-r', alpha=0.75)
+axs['predictive 1'].tick_params(axis='both', which='both', labelbottom=False)
+axs['predictive 2'].set(xlabel='', ylabel='FWHM (m/s)')
+axs['predictive 2'].plot(time1, val1FW, '.k')
+axs['predictive 2'].fill_between(tstar,  bmax2.T, bmin2.T, color="red", alpha=0.25)
+axs['predictive 2'].plot(tstar, a[1].T, '-r',  alpha=0.75)
+axs['predictive 2'].set(xlabel='Time (BJD - 2450000)', ylabel='FWHM (m/s)')
+
 plt.tight_layout()
 plt.savefig('HD101501_fit.pdf', bbox_inches='tight')
 plt.close('all')
