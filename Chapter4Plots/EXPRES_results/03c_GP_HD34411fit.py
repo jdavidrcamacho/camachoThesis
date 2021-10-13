@@ -96,7 +96,7 @@ axs[1].set_ylabel('Residuals (m/s)')
 axs[3].axhline(y=0, linestyle='--', color='k')
 axs[3].errorbar(time, residuals2, val2err, fmt = "k.")
 axs[3].set_ylabel('Residuals (m/s)')
-
+axs[3].set_xlabel('Time (MJD)')
 plt.tight_layout()
 plt.savefig('GP_HD34411fitS.pdf', bbox_inches='tight')
 # plt.close('all')
