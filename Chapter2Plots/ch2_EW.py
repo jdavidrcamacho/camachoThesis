@@ -6,6 +6,8 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
 
 n = np.linspace(-10,10, 1000)
@@ -42,10 +44,10 @@ axs.hlines(y=1, xmin=-1.34, xmax=2.668-1.32,
 #            colors='blue', ls='-', lw=2)
 # axs.axes.get_yaxis().set_visible(False)
 
-bbox_args = dict(boxstyle='round', facecolor='white', 
+bbox_args = dict(boxstyle='round', facecolor='whitesmoke', 
                   alpha=1.00, edgecolor='red')
 arrow_args = dict(arrowstyle="->", edgecolor='red')
-axs.annotate('Equivalent width', xy=(0.5, 0.89), xycoords='figure fraction',
+axs.annotate('Equivalent width', xy=(0.5, 0.83), xycoords='figure fraction',
               xytext=(75, -50), textcoords='offset points',
               ha="right", va="top",
               bbox=bbox_args,

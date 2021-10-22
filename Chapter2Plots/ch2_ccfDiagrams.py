@@ -7,6 +7,8 @@ matplotlib.rcParams.update({
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
 import matplotlib as mpl
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
 
 n = np.linspace(-10,10, 1000)
@@ -183,7 +185,7 @@ x = [1, 1, -0.1, 1.9]
 y = [np.min(f1), 0.87, 0.95, 1]
 axs[1,3].plot(x, y, '-b')
 
-props = dict(boxstyle='round', facecolor='white', alpha=1.00, edgecolor='black')
+props = dict(boxstyle='round', facecolor='whitesmoke', alpha=1.00, edgecolor='black')
 
 textstr1 = '1'
 axs[0,0].text(0.06, 0.94, textstr1, transform=axs[0,0].transAxes, fontsize=10,

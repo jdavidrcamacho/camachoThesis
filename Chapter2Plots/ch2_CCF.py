@@ -6,6 +6,8 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
 
 n = np.linspace(-10,10, 1000)
@@ -33,28 +35,28 @@ axs.vlines(x=1, ymin=np.min(func), ymax=1,
            colors='blue', ls='-', lw=2)
 axs.axes.get_yaxis().set_visible(False)
 
-bbox_args = dict(boxstyle='round', facecolor='white', 
+bbox_args = dict(boxstyle='round', facecolor='whitesmoke', 
                  alpha=1.00, edgecolor='green')
 arrow_args = dict(arrowstyle="->", edgecolor='green')
-axs.annotate('Radial velocity', xy=(0.52, 0.125), xycoords='figure fraction',
+axs.annotate('Radial velocity', xy=(0.43, 0.125), xycoords='figure fraction',
              xytext=(75, 25), textcoords='offset points',
              ha="right", va="top",
              bbox=bbox_args,
              arrowprops=arrow_args)
 
-bbox_args = dict(boxstyle='round', facecolor='white', 
+bbox_args = dict(boxstyle='round', facecolor='whitesmoke', 
                  alpha=1.00, edgecolor='red')
 arrow_args = dict(arrowstyle="->", edgecolor='red')
-axs.annotate('Full width at half maximum', xy=(0.55, 0.57), xycoords='figure fraction',
+axs.annotate('Full width at half maximum', xy=(0.455, 0.515), xycoords='figure fraction',
              xytext=(120, -25), textcoords='offset points',
              ha="right", va="top",
              bbox=bbox_args,
              arrowprops=arrow_args)
 
-bbox_args = dict(boxstyle='round', facecolor='white', 
+bbox_args = dict(boxstyle='round', facecolor='whitesmoke', 
                  alpha=1.00, edgecolor='blue')
 arrow_args = dict(arrowstyle="->", edgecolor='blue')
-axs.annotate('Bissector', xy=(0.51, 0.7), xycoords='figure fraction',
+axs.annotate('Bissector', xy=(0.43, 0.7), xycoords='figure fraction',
              xytext=(-50, -50), textcoords='offset points',
              ha="right", va="top",
              bbox=bbox_args,

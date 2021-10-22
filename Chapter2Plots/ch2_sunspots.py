@@ -9,6 +9,8 @@ matplotlib.rcParams.update({
     'pgf.rcfonts': False})
 
 import matplotlib.pyplot as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
 
 ###### Data .rdb file #####

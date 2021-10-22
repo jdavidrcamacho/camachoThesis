@@ -6,6 +6,8 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
 
 
@@ -33,25 +35,25 @@ textstr = '$y_1$'
 axs.text(-0.03, 0.51, textstr, transform=axs.transAxes, fontsize=10,
         verticalalignment='top', bbox=props)
 
-props = dict(boxstyle='round', facecolor='white', alpha=1.00, edgecolor='black')
+props = dict(boxstyle='round', facecolor='whitesmoke', alpha=1.00, edgecolor='black')
 
 textstr1 = '1'
-axs.text(0.15, -0.03, textstr1, transform=axs.transAxes, fontsize=10,
+axs.text(0.15, -0.05, textstr1, transform=axs.transAxes, fontsize=10,
         verticalalignment='top', bbox=props)
 
 textstr2 = '2'
-axs.text(0.32, -0.03, textstr2, transform=axs.transAxes, fontsize=10,
+axs.text(0.32, -0.05, textstr2, transform=axs.transAxes, fontsize=10,
         verticalalignment='top', bbox=props)
 
 textstr3 = '3'
-axs.text(0.5, -0.03, textstr3, transform=axs.transAxes, fontsize=10,
+axs.text(0.485, -0.05, textstr3, transform=axs.transAxes, fontsize=10,
         verticalalignment='top', bbox=props)
 
 textstr4 = '4'
-axs.text(0.68, -0.03, textstr4, transform=axs.transAxes, fontsize=10,
+axs.text(0.66, -0.05, textstr4, transform=axs.transAxes, fontsize=10,
         verticalalignment='top', bbox=props)
 
 textstr5 = '5'
-axs.text(0.85, -0.025, textstr5, transform=axs.transAxes, fontsize=10,
+axs.text(0.84, -0.05, textstr5, transform=axs.transAxes, fontsize=10,
         verticalalignment='top', bbox=props)
 plt.savefig('fwhmDiagrams.pdf', bbox_inches='tight')
