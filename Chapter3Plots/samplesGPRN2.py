@@ -6,6 +6,8 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
 
 tstar= np.linspace(0, 100, 1000)
@@ -17,7 +19,7 @@ lstyle =['solid', 'dashed', 'dotted', 'dashdot']
 colors= ['blue', 'red', 'green', 'orange']
 linewidth=2
 
-fig = plt.figure(constrained_layout=True, figsize=(6, 8))
+fig = plt.figure(constrained_layout=True, figsize=(7, 8))
 axs = fig.subplot_mosaic(
     [
         ['node1','predictive1'],

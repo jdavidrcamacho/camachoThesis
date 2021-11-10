@@ -6,8 +6,9 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
-
 from tedi import kernels, process, means
 
 time = np.array([2, 5]) 
@@ -18,7 +19,7 @@ mean = means.Constant(0)
 
 tstar= np.linspace(0, 100, 1000)
 
-plt.rcParams['figure.figsize'] = [10/1.5, 3]
+plt.rcParams['figure.figsize'] = [7, 3]
 plt.figure()
 
 kernel1 = kernels.SquaredExponential(1, 1)
@@ -41,5 +42,5 @@ plt.plot(tstar, a3, color = 'green', linestyle='dotted', linewidth=2,
 
 plt.ylabel('Output')
 plt.xlabel('Input')
-plt.legend(facecolor='white', framealpha=1, edgecolor='black')
+plt.legend(facecolor='whitesmoke', framealpha=1, edgecolor='black')
 plt.savefig('samplesSEKernel.pdf', bbox_inches='tight')

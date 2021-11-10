@@ -6,8 +6,9 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
-
 
 from tedi import kernels, process, means
 
@@ -21,7 +22,7 @@ mean = means.Constant(0)
 tedibear = process.GP(kernel, mean, time, val1, val1err)
 
 tstar= np.linspace(0, 8, 100)
-plt.rcParams['figure.figsize'] = [0.7*10, 0.7*5]
+plt.rcParams['figure.figsize'] = [7, 4]
 fig, axs = plt.subplots(nrows=1, ncols=2, sharex=True)
 
 #10, 25, 58

@@ -6,6 +6,8 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
 
 from tedi import kernels, process, means
@@ -18,7 +20,7 @@ mean = means.Constant(0)
 
 tstar= np.linspace(0, 2, 1000)
 
-plt.rcParams['figure.figsize'] = [10/1.5, 3]
+plt.rcParams['figure.figsize'] = [7, 3]
 plt.figure()
 
 eta1, eta3, eta4 = 1, 1, 0.1
@@ -43,5 +45,5 @@ plt.plot(tstar, a3, color = 'green', linestyle='dotted', linewidth=2,
           label='$\eta_4 = 10$')
 plt.ylabel('Output')
 plt.xlabel('Input')
-plt.legend(facecolor='white', framealpha=1, edgecolor='black')
+plt.legend(facecolor='whitesmoke', framealpha=1, edgecolor='black')
 plt.savefig('samplesPerKernel.pdf', bbox_inches='tight')

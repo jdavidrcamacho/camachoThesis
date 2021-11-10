@@ -7,7 +7,10 @@ matplotlib.rcParams.update({
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
 from matplotlib.ticker import AutoMinorLocator
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
+
 
 ###### Data .rdb file #####
 time,rv,rverr,rhk,rhkerr,bis,biserr,fw,fwerr = np.loadtxt("/home/camacho/GPRN/Data/sunBinned_Dumusque.txt", 
@@ -24,11 +27,15 @@ val22 = val2
 val33 = val3 
 val44 = val4 
 
-val22 = val22 - np.polyval(np.polyfit(time, val22, 1), time)
-val33 = val33 - np.polyval(np.polyfit(time, val33, 1), time)
-val44 = val44 - np.polyval(np.polyfit(time, val44, 1), time)
+a1 = np.polyfit(time, val22, 1)
+a2 = np.polyfit(time, val33, 1)
+a3 = np.polyfit(time, val44, 1)
 
-plt.rcParams['figure.figsize'] = [3, 3]
+val22 = val22 #- np.polyval(np.polyfit(time, val22, 1), time)
+val33 = val33 #- np.polyval(np.polyfit(time, val33, 1), time)
+val44 = val44 #- np.polyval(np.polyfit(time, val44, 1), time)
+
+plt.rcParams['figure.figsize'] = [7, 3]
 fig, axs = plt.subplots(1, 1)
 
 from correlation_functions import DCF_EK
@@ -55,7 +62,7 @@ C_EK, C_EK_err, bins = DCF_EK(time, val11, val44, val4err, val4err, bins=EKbins)
 t_EK = 0.5 * (bins[1:] + bins[:-1])
 m = ~np.isnan(C_EK)
 axs.plot(t_EK[m], C_EK[m], ':g', label='RV and $\log R^{\'}_{hk}$')
-axs.legend(loc='upper right', facecolor='white', framealpha=1, edgecolor='black')
+#axs.legend(loc='upper right', facecolor='whitesmoke', framealpha=1, edgecolor='black')
 axs.set_xlim(-15, 15)
 axs.grid(True)
 axs.set_ylabel('Cross-correlated signal')

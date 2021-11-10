@@ -13,6 +13,7 @@ plt.close('all')
 n = np.linspace(-10,10, 1000)
 
 from scipy.stats import norm
+matplotlib.rcParams['figure.figsize'] = [4, 3]
 
 m, std = 0, 1.25
 func = 1 - norm(m, std).pdf(n)
@@ -27,19 +28,19 @@ axs.set_xlabel('Velocity (m/s)')
 axs.plot(n+1,  func, 'k', linewidth=2)
 axs.set_ylim(0.625, 1.025)
 
-axs.hlines(y=funcHM, xmin=(1 - fwhm/2), xmax=(1 + fwhm/2), 
-           colors='red', ls='--', lw=2)
-axs.vlines(x=1, ymin=0.25, ymax=np.min(func), 
-           colors='green', ls=':', lw=2)
 axs.vlines(x=1, ymin=np.min(func), ymax=1, 
            colors='blue', ls='-', lw=2)
+axs.hlines(y=funcHM, xmin=(1 - fwhm/2), xmax=(1 + fwhm/2), 
+           colors='red', ls='-', lw=2)
+axs.vlines(x=1, ymin=0.25, ymax=np.min(func), 
+           colors='green', ls=':', lw=2)
 axs.axes.get_yaxis().set_visible(False)
 
 bbox_args = dict(boxstyle='round', facecolor='whitesmoke', 
                  alpha=1.00, edgecolor='green')
 arrow_args = dict(arrowstyle="->", edgecolor='green')
-axs.annotate('Radial velocity', xy=(0.43, 0.125), xycoords='figure fraction',
-             xytext=(75, 25), textcoords='offset points',
+axs.annotate('Radial velocity', xy=(0.45, 0.20), xycoords='figure fraction',
+             xytext=(100, 20), textcoords='offset points',
              ha="right", va="top",
              bbox=bbox_args,
              arrowprops=arrow_args)
@@ -47,8 +48,8 @@ axs.annotate('Radial velocity', xy=(0.43, 0.125), xycoords='figure fraction',
 bbox_args = dict(boxstyle='round', facecolor='whitesmoke', 
                  alpha=1.00, edgecolor='red')
 arrow_args = dict(arrowstyle="->", edgecolor='red')
-axs.annotate('Full width at half maximum', xy=(0.455, 0.515), xycoords='figure fraction',
-             xytext=(120, -25), textcoords='offset points',
+axs.annotate('Full width at half maximum', xy=(0.425, 0.58), xycoords='figure fraction',
+             xytext=(40, -30), textcoords='offset points',
              ha="right", va="top",
              bbox=bbox_args,
              arrowprops=arrow_args)
@@ -56,8 +57,8 @@ axs.annotate('Full width at half maximum', xy=(0.455, 0.515), xycoords='figure f
 bbox_args = dict(boxstyle='round', facecolor='whitesmoke', 
                  alpha=1.00, edgecolor='blue')
 arrow_args = dict(arrowstyle="->", edgecolor='blue')
-axs.annotate('Bissector', xy=(0.43, 0.7), xycoords='figure fraction',
-             xytext=(-50, -50), textcoords='offset points',
+axs.annotate('Bissector', xy=(0.45, 0.8), xycoords='figure fraction',
+             xytext=(50, -20), textcoords='offset points',
              ha="right", va="top",
              bbox=bbox_args,
              arrowprops=arrow_args)

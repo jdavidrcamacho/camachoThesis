@@ -6,13 +6,14 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
-
 
 from scipy.stats import norm
 x = np.linspace(-5, 5, 1000)
 
-plt.rcParams['figure.figsize'] = [0.7*10, 0.6*5]
+plt.rcParams['figure.figsize'] = [7, 3]
 plt.figure()
 y = norm(0, 1).pdf(x)
 plt.fill_between(x, y, color='b', alpha = 0.50)

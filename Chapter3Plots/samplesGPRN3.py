@@ -6,6 +6,8 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
 
 tstar= np.linspace(0, 100, 1000)
@@ -17,7 +19,7 @@ lstyle =['solid', 'dashed', 'dotted', 'dashdot']
 colors= ['blue', 'red', 'green', 'orange']
 linewidth=2
 
-fig = plt.figure(constrained_layout=True, figsize=(8, 10))
+fig = plt.figure(constrained_layout=True, figsize=(7, 10))
 axs = fig.subplot_mosaic(
     [
         ['node1','predictive1'],
@@ -35,7 +37,7 @@ from gprn.meanField import inference
 
 GPRN = inference(1, tstar, val1, val1err)
 node = [QuasiPeriodic(1, 50, 20, 0.75)]
-weight = [SquaredExponential(0.1, 1000)]
+weight = [SquaredExponential(1, 10)]
 mean = [Constant(0)]
 jitter = [s]
 samples1 = GPRN.sampleIt(node[0], time=tstar)
@@ -51,7 +53,7 @@ axs['weight1'].plot(tstar, samples2, linewidth=linewidth, linestyle=lstyle[0],
                     color=colors[0])
 
 GPRN = inference(1, tstar, val1, val1err)
-weight = [SquaredExponential(1, 1000)]
+weight = [SquaredExponential(1, 100)]
 samples2 = GPRN.sampleIt(weight[0], time=tstar)
 axs['predictive2'].set(xlabel='Input', ylabel='GPRN output')
 axs['predictive2'].plot(tstar, samples1*samples2, linewidth=linewidth, 
@@ -64,7 +66,7 @@ axs['weight2'].plot(tstar, samples2, linewidth=linewidth, linestyle=lstyle[1],
                     color=colors[1])
 
 GPRN = inference(1, tstar, val1, val1err)
-weight = [SquaredExponential(10, 1000)]
+weight = [SquaredExponential(1, 1000)]
 samples2 = GPRN.sampleIt(weight[0], time=tstar)
 axs['predictive3'].set(xlabel='Input', ylabel='GPRN output')
 axs['predictive3'].plot(tstar, samples1*samples2, linewidth=linewidth, 
@@ -75,5 +77,5 @@ axs['node3'].plot(tstar, samples1, linewidth=linewidth, linestyle=lstyle[2],
 axs['weight3'].set(xlabel='Input', ylabel='Weight output')
 axs['weight3'].plot(tstar, samples2, linewidth=linewidth, linestyle=lstyle[2], 
                     color=colors[2])
-fig.savefig('samplesGPRN2.pdf', bbox_inches='tight')
+fig.savefig('samplesGPRN3.pdf', bbox_inches='tight')
 # plt.close('all')

@@ -21,7 +21,7 @@ funcMin, funcMax = np.min(func), np.max(func)
 funcHM = funcMax - (funcMax - funcMin)/2 
 fwhm = 2*np.sqrt(2*np.log(2))*std
 
-matplotlib.rcParams['figure.figsize'] = [8/2, 5/2]
+matplotlib.rcParams['figure.figsize'] = [4, 2.5]
 from matplotlib.patches import Rectangle
 
 fig, axs = plt.subplots(nrows=1, ncols=1)

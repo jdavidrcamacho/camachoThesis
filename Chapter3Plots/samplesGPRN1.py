@@ -6,9 +6,11 @@ matplotlib.rcParams.update({
     'text.usetex': True,
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 plt.close('all')
 
-tstar= np.linspace(0, 100, 1000)
+tstar= np.linspace(0, 50, 100)
 val1 = np.ones_like(tstar)
 val1err = 0.1*np.ones_like(tstar)
 
@@ -20,8 +22,20 @@ lstyle =['solid', 'dashed', 'dotted', 'dashdot']
 colors= ['blue', 'red', 'green', 'orange']
 linewidth=2
 
+
+from tedi import kernels, process, means
+kernel1 = kernels.QuasiPeriodic(n1, n2, n3, n4) #+ kernels.WhiteNoise(s)
+mean = means.Constant(0)
+tedibear0 = process.GP(kernel1, mean, tstar, val1, val1err)
+a0 = tedibear0.sample(kernel1, tstar)
+
+plt.figure()
+plt.plot(tstar, a0, 'ok')
+plt.show()
+         
+         
 fig, axs = plt.subplots(nrows=3,ncols=1, sharex=True)
-fig.set_size_inches(w=0.5*15, h=0.5*10)
+fig.set_size_inches(w=7, h=5)
 
 from gprn.covFunction import SquaredExponential, QuasiPeriodic, Periodic
 from gprn.meanFunction import Linear, Constant
