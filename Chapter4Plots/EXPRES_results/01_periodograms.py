@@ -7,7 +7,8 @@ matplotlib.rcParams.update({
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
 plt.close('all')
-
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 from astropy.timeseries import LombScargle
 linesize = 1
 
@@ -65,7 +66,7 @@ one = falseAlarms1[1] * np.ones_like(f1)
 axs[1,1].plot(1/f1, one, color='red', linestyle='dashed', alpha=1,linewidth=linesize)
 axs[1,1].set_xlim(1,time1.ptp())
 axs[1,1].set_xlabel('Period (days)')
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 plt.savefig('periodogram_HD10700_all.pdf', bbox_inches='tight')
 plt.close('all')
 
@@ -123,7 +124,7 @@ one = falseAlarms2[1] * np.ones_like(f2)
 axs[1,1].plot(1/f2, one, color='red', linestyle='dashed', alpha=1,linewidth=linesize)
 axs[1,1].set_xlim(1,time2.ptp())
 axs[1,1].set_xlabel('Period (days)')
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 plt.savefig('periodogram_HD26965_all.pdf', bbox_inches='tight')
 plt.close('all')
 
@@ -172,7 +173,7 @@ one = falseAlarms3[1] * np.ones_like(f3)
 axs[1,1].plot(1/f3, one, color='red', linestyle='dashed', alpha=1,linewidth=linesize)
 axs[1,1].set_xlim(1,time3.ptp())
 axs[1,1].set_xlabel('Period (days)')
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 plt.savefig('periodogram_HD34411_all.pdf', bbox_inches='tight')
 plt.close('all')
 
@@ -232,7 +233,7 @@ one = falseAlarms4[1] * np.ones_like(f4)
 axs[1,1].plot(1/f4, one, color='red', linestyle='dashed', alpha=1,linewidth=linesize)
 axs[1,1].set_xlim(5,time4.ptp())
 axs[1,1].set_xlabel('Period (days)')
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 plt.savefig('periodogram_HD101501_all.pdf', bbox_inches='tight')
 plt.show()
 #plt.close('all')

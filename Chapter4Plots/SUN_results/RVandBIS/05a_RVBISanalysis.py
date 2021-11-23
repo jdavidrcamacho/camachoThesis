@@ -20,8 +20,8 @@ time,rv,rverr,bis,biserr= np.loadtxt("/home/camacho/Github/camachoThesis/Chapter
 time, val1, val1err = time, rv, rverr
 val2, val2err = bis, biserr
 
-gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/05b_GP_RVsBIS/savedProgress.h5"
-gprnResults = "/home/camacho/GPRN/01_SUN/70_sun/GPRN/05a_gprn_RVsBIS/savedProgress.h5"
+gpResults = "/media/camacho/HDD 1 tb/GPRN/01_SUN/70_sun/GP/05b_GP_RVsBIS/savedProgress.h5"
+gprnResults = "/media/camacho/HDD 1 tb/GPRN/01_SUN/70_sun/GPRN/05a_gprn_RVsBIS/savedProgress.h5"
 
 gplabels = np.array(["$\eta_2$", "$\eta_3$", "$\eta_4$", "$\eta_11$", "$\eta_12$",
                    "slope", "offset", "slope", "offset", "$s_1$", "$s_2$"])
@@ -58,7 +58,7 @@ means = [art.mean.Linear(gpMapSample[-1,5], gpMapSample[-1,6]),
 jitters = [gpMapSample[-1,9], gpMapSample[-1,10]]
 GPnet = network(1, time, val1, val1err, val2, val2err)
 
-tstar = np.linspace(time.min()-10, time.max()+10, 5000)
+tstar = np.linspace(time.min()-10, time.max()+10, 2500)
 tstar = np.sort(np.concatenate((tstar, time)))
 
 mu11, std11, cov11 = GPnet.prediction(nodes = nodes, weights = weights, means = means,
@@ -123,7 +123,7 @@ elbo, vm, vv = GPRN.ELBOcalc(nodes, weight, means, jitter, iterations = 5000,
 elbo, m, v = GPRN.ELBOcalc(nodes, weight, means, jitter, 
                               iterations = 50000, mu='init', var='init')
 
-tstar = np.linspace(time.min()-10, time.max()+10, 5000)
+tstar = np.linspace(time.min()-10, time.max()+10, 2500)
 tstar = np.sort(np.concatenate((tstar, time)))
 
 a, b, c = GPRN.Prediction(nodes, weight, means, jitter, tstar, m, v, 
@@ -169,7 +169,7 @@ axs[3].legend(loc='upper left', bbox_to_anchor=(0, 0.8),
 
 plt.tight_layout()
 plt.savefig('RVBISfit_withResidualsPlot.pdf', bbox_inches='tight')
-plt.close('all')
+# plt.close('all')
 
 
 # ard = np.abs(gprnresiduals) - np.abs(gpresiduals)

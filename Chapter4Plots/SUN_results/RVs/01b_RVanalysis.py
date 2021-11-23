@@ -1,6 +1,6 @@
 import numpy as np
 import matplotlib
-matplotlib.rcParams['figure.figsize'] = [7, 3]
+matplotlib.rcParams['figure.figsize'] = [7, 6]
 matplotlib.rcParams.update({
     "pgf.texsystem": "pdflatex",
     'font.family': 'serif',
@@ -9,28 +9,22 @@ matplotlib.rcParams.update({
 import matplotlib.pylab as plt
 plt.close('all')
 
-
 ###### Data .rdb file #####
 time,rv,rverr = np.loadtxt("/home/camacho/Github/camachoThesis/Chapter4Plots/SUN_periodograms/sunBinned_Dumusque.txt", 
-                           skiprows = 1, unpack = True, usecols = (0,3,4))
+                           skiprows = 1, unpack = True, usecols = (0,1,2))
 val1, val1err = rv, rverr
+gpResults = "/media/camacho/HDD 1 tb/GPRN/01_SUN/70_sun/GP/01a_GP_RV/savedProgress.h5"
+gprnResults = "/media/camacho/HDD 1 tb/GPRN/01_SUN/70_sun/GPRN/01a_gprn_RV/savedProgress.h5"
 
-gpResults = "/media/camacho/HDD 1 tb/GPRN/01_SUN/70_sun/GP/04a_GP_Rhk/savedProgress.h5"
-gprnResults = "/media/camacho/HDD 1 tb/GPRN/01_SUN/70_sun/GPRN/04a_gprn_Rhk/savedProgress.h5"
-
-gplabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", "slope",  "offset", "s"])
-gprnlabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", "$\eta_{1_1}$", 
-                       "$\eta_{2_1}$", "slope", "offset", "jitter"])
-
-gplabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", "slope",  "offset", "s"])
-gprnlabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", "$\eta_{1_1}$", 
-                       "$\eta_{2_1}$", "slope", "offset", "jitter"])
+gplabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", 
+                     "slope", "offset", "s"])
+gprnlabels = np.array(["$\eta_1$", "$\eta_2$", "$\eta_3$", "$\eta_4$", 
+                       "$\eta_{1_1}$", "$\eta_{2_1}$", 
+                       "slope", "offset", "jitter"])
 
 from gpyrn import covfunc, meanfunc, meanfield
 plt.rcParams['axes.facecolor'] = 'white'
 plt.rcParams['axes.linewidth'] = 2
-matplotlib.rcParams['figure.figsize'] = [7, 6]
-
 from matplotlib.ticker import AutoMinorLocator
 import emcee
 import tedi as ted
@@ -55,14 +49,14 @@ fig, axs = plt.subplots(nrows=4,ncols=1, sharex=True,
                                      'height_ratios': [3, 1.75, 3, 1.75]})
 
 axs[0].errorbar(time, val1, val1err, fmt= '.k', alpha=0.5)
-axs[0].set_ylabel('$\log R_{hk}$')
+axs[0].set_ylabel('RV (m/s)')
 axs[0].xaxis.set_minor_locator(AutoMinorLocator(5))
 axs[0].yaxis.set_minor_locator(AutoMinorLocator(5))
 axs[0].grid(which='major', alpha=0.5)
 axs[0].grid(which='minor', alpha=0.2)
 
 axs[2].errorbar(time, val1, val1err, fmt= '.k', alpha=0.5)
-axs[2].set_ylabel('$\log R_{hk}$')
+axs[2].set_ylabel('RV (m/s)')
 axs[2].xaxis.set_minor_locator(AutoMinorLocator(5))
 axs[2].yaxis.set_minor_locator(AutoMinorLocator(5))
 axs[2].grid(which='major', alpha=0.5)
@@ -171,5 +165,4 @@ axs[3].set_ylabel('Residuals')#\nRMS: {0}m/s'.format(round(rms,3)))
 axs[3].set_xlabel('Time (BJD - 2400000)')
 
 plt.tight_layout(pad=0.1, h_pad=0.25, w_pad=0.1)
-plt.savefig('logRhkfit_withResidualsPlot.pdf', bbox_inches='tight')
-plt.close('all')
+plt.savefig('RVfit_withResidualsPlot.pdf', bbox_inches='tight')

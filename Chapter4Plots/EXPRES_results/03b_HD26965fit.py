@@ -7,7 +7,8 @@ matplotlib.rcParams.update({
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
 plt.close('all')
-
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 from gprn.covFunction import SquaredExponential, QuasiPeriodic
 from gprn.meanFunction import Linear
 from gprn.meanField import inference
@@ -25,7 +26,7 @@ GPRN1 = inference(1, time1, val1RV, val1RVerr, val1FW, val1FWerr)
 
 
 
-filename = "/home/camacho/GPRN/02_EXPRES/New/HD26965/01a_GPRN_RVsFW/savedProgress.h5"
+filename = "/media/camacho/HDD 1 tb/GPRN/02_EXPRES/New/HD26965/01a_GPRN_RVsFW/savedProgress.h5"
 sampler = emcee.backends.HDFBackend(filename)
 #autocorrelation
 tau = sampler.get_autocorr_time(tol=0)
@@ -76,14 +77,14 @@ axs = fig.subplot_mosaic(
     ],
 )
 
-axs['weight 1'].set(xlabel='', ylabel='$Weight_1$ (m/s)')
+axs['weight 1'].set(xlabel='', ylabel='$Weight^{RV}$ (m/s)')
 axs['weight 1'].plot(tstar, bb[1,0].T, '-b')
 axs['weight 1'].tick_params(axis='both', which='both', labelbottom=False)
 axs['node'].set(xlabel='', ylabel='Node')
 axs['node'].plot(tstar, bb[0,0].T, '-b')
 axs['node'].tick_params(axis='both', which='both', labelbottom=False)
 axs['weight 2'].plot(tstar, bb[1,1].T, '-b')
-axs['weight 2'].set(xlabel='Time (MJD)', ylabel=' $Weight_2$ (m/s)')
+axs['weight 2'].set(xlabel='Time (MJD)', ylabel=' $Weight^{FWHM}$ (m/s)')
 
 axs['predictive 1'].set(xlabel='', ylabel='RV (m/s)')
 axs['predictive 1'].plot(time1, val1RV, '.k')
@@ -96,6 +97,6 @@ axs['predictive 2'].fill_between(tstar,  bmax2.T, bmin2.T, color="red", alpha=0.
 axs['predictive 2'].plot(tstar, a[1].T, '-r',  alpha=0.75)
 axs['predictive 2'].set(xlabel='Time (MJD)', ylabel='FWHM (m/s)')
 
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 plt.savefig('HD26965_fit.pdf', bbox_inches='tight')
 plt.close('all')

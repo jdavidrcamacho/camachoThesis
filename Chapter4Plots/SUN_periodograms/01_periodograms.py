@@ -16,10 +16,10 @@ plt.close('all')
 time,rv,rverr,rhk,rhkerr,bis,biserr,fw,fwerr = np.loadtxt("sunBinned_Dumusque.txt", 
                                                            skiprows = 1, 
                                                            unpack = True, 
-                                                           usecols = (0, 1, 2, 3, 4,
-                                                                      7, 8, 9, 10))
+                                                           usecols = (0, 1, 2, 
+                                                                      3, 4, 7, 
+                                                                      8, 9, 10))
 time = time
-
 
 # Trend removal ################################################################
 rvFit = np.poly1d(np.polyfit(time, rv, 1))

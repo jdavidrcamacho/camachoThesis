@@ -17,7 +17,7 @@ import gprn as gprn
 
 time,rv,rverr,fw,fwerr= np.loadtxt("/home/camacho/Github/camachoThesis/Chapter4Plots/SUN_periodograms/sunBinned_Dumusque.txt", 
                                      skiprows = 1,  unpack = True, usecols = (0,1,2,9,10))
-time, val1, val1err = time, rv, rverr
+val1, val1err = rv, rverr
 val2, val2err = fw, fwerr
 
 gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/06b_GP_RVsFWHM/savedProgress.h5"

@@ -7,7 +7,8 @@ matplotlib.rcParams.update({
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
 plt.close('all')
-
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 from astropy.timeseries import LombScargle
 linesize = 1
 
@@ -43,7 +44,7 @@ axs[1].plot(1/f1, one, color='red', linestyle='dashed', alpha=1,linewidth=linesi
 axs[1].set_xlim(1,time1.ptp())
 axs[1].set_ylabel('Normalized power')
 axs[1].set_xlabel('Period (days)')
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 plt.savefig('periodogram_HD10700.pdf', bbox_inches='tight')
 plt.close('all')
 
@@ -80,7 +81,7 @@ axs[1].plot(1/f2, one, color='red', linestyle='dashed', alpha=1, linewidth=lines
 axs[1].set_xlim(1,time2.ptp())
 axs[1].set_ylabel('Normalized power')
 axs[1].set_xlabel('Period (days)')
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 plt.savefig('periodogram_HD26965.pdf', bbox_inches='tight')
 plt.close('all')
 
@@ -114,7 +115,7 @@ axs[1].plot(1/f3, one, color='red', linestyle='dashed', alpha=1, linewidth=lines
 axs[1].set_xlim(1,time3.ptp())
 axs[1].set_ylabel('Normalized power')
 axs[1].set_xlabel('Period (days)')
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 plt.savefig('periodogram_HD34411.pdf', bbox_inches='tight')
 plt.close('all')
 
@@ -150,6 +151,6 @@ axs[1].plot(1/f4, one, color='red', linestyle='dashed', alpha=1, linewidth=lines
 axs[1].set_xlim(5,time4.ptp())
 axs[1].set_ylabel('Normalized power')
 axs[1].set_xlabel('Period (days)')
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 plt.savefig('periodogram_HD101501.pdf', bbox_inches='tight')
 plt.close('all')

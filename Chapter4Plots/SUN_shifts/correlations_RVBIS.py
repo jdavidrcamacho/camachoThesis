@@ -9,6 +9,8 @@ import matplotlib.pylab as plt
 from matplotlib.ticker import AutoMinorLocator
 plt.close('all')
 import emcee
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 
 ###### Data .rdb file #####
 time,rv,rverr,rhk,rhkerr,bis,biserr,fw,fwerr = np.loadtxt("/home/camacho/GPRN/Data/sunBinned_Dumusque.txt", 
@@ -25,8 +27,8 @@ val22err = np.mean(val2err) #* np.ones_like(val2)
 
 from correlation_functions import DCF_EK
 
-gpResults = "/home/camacho/GPRN/01_SUN/70_sun/GP/05d_GP_RVsBIS/savedProgress.h5"
-gprnResults = "/home/camacho/GPRN/01_SUN/70_sun/GPRN/05a_gprn_RVsBIS/savedProgress.h5"
+gpResults = "/media/camacho/HDD 1 tb/GPRN/01_SUN/70_sun/GP/05d_GP_RVsBIS/savedProgress.h5"
+gprnResults = "/media/camacho/HDD 1 tb/GPRN/01_SUN/70_sun/GPRN/05a_gprn_RVsBIS/savedProgress.h5"
 
 gpsampler = emcee.backends.HDFBackend(gpResults)
 gptau = gpsampler.get_autocorr_time(tol=0)
@@ -138,9 +140,9 @@ axs = fig.subplot_mosaic([['GP', '.'],
 
 axs['GP'].plot(tstar, val11, '-b', label = 'RV', linewidth=1)
 axs['GP'].plot(tstar, val22, '--r', label = 'BIS', linewidth=1)
-axs['GP'].set(xlabel='Time (BJD-2400000)', ylabel='Normalized\nGP predictive')
-axs['GP'].tick_params(axis='both', which='both', labelbottom=True)
-axs['GP'].legend(loc='upper left', facecolor='white', framealpha=1, edgecolor='black')
+axs['GP'].set(xlabel='', ylabel='Normalized\nGP predictive')
+axs['GP'].tick_params(axis='both', which='both', labelbottom=False)
+axs['GP'].legend(loc='upper left', facecolor='whitesmoke', framealpha=1, edgecolor='black')
 axs['LAG'].axvline(x=0, linestyle='-', color='gray')
 
 axs['LAG'].xaxis.set_minor_locator(AutoMinorLocator(5))
@@ -158,14 +160,14 @@ axs['GPRN'].plot(tstar, val111, '-b', label = 'RV', linewidth=1)
 axs['GPRN'].plot(tstar, val222, '--r', label = 'BIS', linewidth=1)
 axs['GPRN'].set(xlabel='Time (BJD-2400000)', ylabel='Normalized\nGPRN predictive')
 axs['GPRN'].tick_params(axis='both', which='both', labelbottom=True)
-axs['GPRN'].legend(loc='upper left', facecolor='white', framealpha=1, edgecolor='black')
+axs['GPRN'].legend(loc='upper left', facecolor='whitesmoke', framealpha=1, edgecolor='black')
 
 axs['LAG'].plot(t_EK2[m2], C_EK2[m2], ':k', label = 'GPRN')
 axs['LAG'].set_ylabel('Cross-correlated signal')
 axs['LAG'].set_xlabel('Lag (days)')
 axs['LAG'].tick_params(axis='both', which='both', labelbottom=True)
 axs['LAG'].legend(loc='lower center', bbox_to_anchor=(0., 1, 1, 1),
-                  facecolor='white', framealpha=1, edgecolor='black')
+                  facecolor='whitesmoke', framealpha=1, edgecolor='black')
 
 # axs['LAG'].plot(t_EK3[m3], C_EK3[m3], ':k', label = 'GPRN')
 print (t_EK1[m1][np.where((C_EK1[m1] == np.max(C_EK1[m1])))])
@@ -178,6 +180,7 @@ axs['GP'].xaxis.set_minor_locator(AutoMinorLocator(5))
 axs['GP'].yaxis.set_minor_locator(AutoMinorLocator(5))
 axs['GP'].grid(which='major', alpha=0.5)
 axs['GP'].grid(which='minor', alpha=0.2)
-plt.tight_layout()
+
+plt.tight_layout(pad=0.1, h_pad=0.1, w_pad=0.1)
 fig.savefig('LAG_RVandBIS.pdf', bbox_inches='tight')
 plt.close('all')

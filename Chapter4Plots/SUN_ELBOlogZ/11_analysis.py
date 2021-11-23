@@ -7,38 +7,38 @@ matplotlib.rcParams.update({
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
 plt.close('all')
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
+matplotlib.rcParams['figure.figsize'] = [7, 4]
 
 
-points, logz, elbo, diff = np.loadtxt("elboLogZ_results_all.txt", skiprows = 1, 
+points, logz, elbo, diff = np.loadtxt("elboLogZ_results.txt", skiprows = 1, 
                                       unpack = True, usecols = (0, 1, 2, 3))
 
-first50 = points[0:50]
-first50logz = logz[0:50]
-first50elbo = elbo[0:50]
-
-#plt.rcParams['figure.figsize'] = [15, 5]
-plt.figure()
-plt.plot(first50, first50elbo, '.--b', label = 'ELBO')
-plt.plot(first50, first50logz, '.-r', label = 'log Z')
-plt.ylabel('Value')
-plt.xlabel('Points')
-plt.legend(facecolor='white', framealpha=1, edgecolor='black')
-
-
-plt.rcParams['figure.figsize'] = [7, 3]
-
 meanDiff = np.mean(diff)
+print(meanDiff)
+
 fig, axs = plt.subplots(2,1, sharex=True, gridspec_kw={'width_ratios': [1],
                                                        'height_ratios': [2, 1]})
-#axs[0].set_xscale('log')
-axs[0].plot(points, elbo, '.-r', label = 'ELBO', linewidth=2)
-axs[0].plot(points, logz, '.:b', label = '$\log \mathcal{Z}$', linewidth=2)
+
+axs[0].set_xscale('log')
+axs[0].plot(points, elbo, 'o-r', label = 'ELBO', linewidth=2)
+axs[0].plot(points, logz, 'o--b', label = '$\\texttt{dynesty}$', linewidth=2)
 axs[0].set_ylabel('Value')
-axs[0].legend(facecolor='white', framealpha=1, edgecolor='black')
-axs[0].tick_params(axis='both', which='both', labelbottom=False)
-axs[1].plot(points,  diff, '.k', linewidth=2)
 axs[1].axhline(y = meanDiff, linestyle='--', color='k', linewidth=1)
-axs[1].set_ylabel('$\log \mathcal{Z}$  - ELBO')
+
+axs[0].legend(facecolor='whitesmoke', framealpha=1, edgecolor='black')
+axs[0].tick_params(axis='both', which='both', labelbottom=False)
+axs[1].plot(points,  diff, 'ok', linewidth=2, alpha=0.5)
+axs[1].set_ylabel('$\\texttt{dynesty}$  - ELBO')
 axs[1].set_xlabel('Number of data points')
 axs[1].tick_params(axis='both', which='both', labelbottom=True)
+
+axs[1].text(0.28, 0.75, 'Average difference = {0}'.format(round(meanDiff, 3)),
+            bbox={'facecolor':'whitesmoke', 'alpha':1, 'boxstyle':'round'},
+            verticalalignment='bottom', horizontalalignment='right',
+            transform=axs[1].transAxes, color='black', fontsize=10)
+
+plt.tight_layout(pad=0.1, h_pad=0.25, w_pad=0.1)
 plt.savefig('elboAnalysis.pdf', bbox_inches='tight')
+# plt.close('all')

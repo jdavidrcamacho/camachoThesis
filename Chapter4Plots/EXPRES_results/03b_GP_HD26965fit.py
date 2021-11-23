@@ -7,7 +7,8 @@ matplotlib.rcParams.update({
     'pgf.rcfonts': False})
 import matplotlib.pylab as plt
 plt.close('all')
-
+plt.rcParams['axes.facecolor'] = 'white'
+plt.rcParams['axes.linewidth'] = 2
 from gprn.covFunction import SquaredExponential, QuasiPeriodic
 from gprn.meanFunction import Linear
 from gprn.meanField import inference
@@ -25,7 +26,7 @@ time = data[:,0].T
 val1, val1err = data[:,1].T, data[:,2].T
 val2, val2err = data[:,3].T, 2*val1err
 
-filename = "/home/camacho/GPRN/02_EXPRES/New/HD26965/02c_GP_RVsFWHM/savedProgress.h5"
+filename = "/media/camacho/HDD 1 tb/GPRN/02_EXPRES/New/HD26965/02c_GP_RVsFWHM/savedProgress.h5"
 sampler = emcee.backends.HDFBackend(filename)
 
 #autocorrelation
@@ -39,8 +40,8 @@ values = np.where(combSamples[:,-1] == np.max(combSamples[:,-1]))
 mapSample = combSamples[values,:]
 mapSample = mapSample.reshape(-1, 12)
 nodes = [node.QuasiPeriodic(mapSample[-1,0], mapSample[-1,1], mapSample[-1,2])]
-weights = [weight.Constant(mapSample[-1,3]**2),
-           weight.Constant(mapSample[-1,4]**2)]
+weights = [weight.Constant(mapSample[-1,3]),
+           weight.Constant(mapSample[-1,4])]
 means = [mean.Linear(mapSample[-1,5], mapSample[-1,6]),
          mean.Linear(mapSample[-1,7], mapSample[-1,8])]
 jitters = [mapSample[-1,9], mapSample[-1,10]]
@@ -97,6 +98,6 @@ axs[3].axhline(y=0, linestyle='--', color='k')
 axs[3].errorbar(time, residuals2, val2err, fmt = "k.")
 axs[3].set_ylabel('Residuals (m/s)')
 axs[3].set_xlabel('Time (MJD)')
-plt.tight_layout()
+plt.tight_layout(pad=0.1, h_pad=0.25, w_pad=0.1)
 plt.savefig('GP_HD26965fitS.pdf', bbox_inches='tight')
 # plt.close('all')
