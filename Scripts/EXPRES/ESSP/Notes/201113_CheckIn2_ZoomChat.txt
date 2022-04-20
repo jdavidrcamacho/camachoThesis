@@ -1,0 +1,24 @@
+09:29:51	 From Eric Ford : For the GPRN, are your activation functions linear or non-linear functions?
+09:38:30	 From Debra Fischer : What is the final RMS?
+09:50:15	 From chrisleet : microphone appears to be broken
+09:50:33	 From chrisleet : skip me pls :(
+09:50:35	 From Christian Gilbertson (they/them or he/her) : :(
+09:50:37	 From chrisleet : very sorry
+09:50:59	 From chrisleet : let me quickly restart computer!
+09:55:24	 From Debra Fischer : is this with SOAP data?
+09:58:41	 From Zoe de Beurs (she/hers) : For Chris: How was the SOAP2.0 generated? Did you randomly generate it and if so, using what ranges of parameter space?
+09:59:10	 From Sally Dodson-Robinson : Definitely want to discuss the coherence metric - we recommend it become “step 0” in every activity analysis
+10:00:49	 From chrisleet : We aimed to replicate your paper.
+10:00:57	 From chrisleet : We thought your experimental setup was brilliant!
+10:01:20	 From chrisleet : The only bit we couldn’t quite replicate was the Poisson distribution to determine active regions.
+10:02:00	 From chrisleet : We err’ed on the side of caution by choosing a “fat” which produced a lot of 2,3,4 active region stars.
+10:04:17	 From Zoe de Beurs (she/hers) : Oh, that’s great! If you all would like to see the exact way generated the poisson distribution for the active regions, we’d be happy to share that part of our code!
+10:10:05	 From Sally Dodson-Robinson : Are you perhaps talking about the HARPS-N solar data or a set of SOAP simulations?
+10:12:03	 From Xavier Dumusque : There are 3 yrs of HARPN solar data that are just published
+10:14:42	 From Zoe de Beurs (she/hers) : @Chris, we are also happy to share the full SOAP2.0 simulated dataset if that would be helpful to anyone!
+10:14:51	 From Andrew Cameron : Injection would need to be done at spectrum level, right?
+10:16:01	 From Andrew Vanderburg : yes great point about injecting at the spectrum level
+10:16:04	 From Norbert Zicher : You might consider injecting one and not telling us, see what people get
+10:18:13	 From Debra Fischer : Mystery planet
+10:18:36	 From Eric Ford : Thanks!
+10:19:24	 From Michael Cretignier : Yes thanks you for this initiative. Really interesting challenge and interesting results everywhere :)

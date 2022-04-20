@@ -32,11 +32,7 @@ result5 = df.loc["Astrometry"]
 
 ###### Discoveries by Year
 dates = data.discovered
-first = int(data.discovered.min())
-latest = int(data.discovered.max())
-bins = np.linspace(first, latest, latest-first+1)
 
-##### Combined plots
 from datetime import date
 today = date.today()
 today = today.strftime("%d/%m/%Y")
@@ -67,5 +63,5 @@ axs.scatter(result5.orbital_period, result5.mass, s=7.5, facecolors='none',
 plt.legend(facecolor='whitesmoke', framealpha=1, edgecolor='black',
            loc='lower right')
 plt.savefig('05_discoveriesAndMassPeriod.pdf', bbox_inches='tight')
-plt.close('all')
+# plt.close('all')
 
