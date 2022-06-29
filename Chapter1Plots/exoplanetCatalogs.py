@@ -39,6 +39,7 @@ today = today.strftime("%d/%m/%Y")
 
 plt.rcParams['figure.figsize'] = [4, 4]
 fig, axs = plt.subplots(nrows=1, ncols=1, squeeze=True)
+print( dates.size, today)
 
 textstr = '\n'.join(('{0} confirmed exoplanets as of {1}'.format(dates.size, today),
                      ))
@@ -62,6 +63,6 @@ axs.scatter(result5.orbital_period, result5.mass, s=7.5, facecolors='none',
             marker='P', color=colors[4],alpha=0.85, label='Astrometry')
 plt.legend(facecolor='whitesmoke', framealpha=1, edgecolor='black',
            loc='lower right')
-plt.savefig('05_discoveriesAndMassPeriod.pdf', bbox_inches='tight')
+plt.savefig('05_discoveriesAndMassPeriod.png', bbox_inches='tight')
 # plt.close('all')
 

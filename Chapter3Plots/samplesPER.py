@@ -30,14 +30,14 @@ a1 = tedibear1.sample(kernel1, tstar)
 plt.plot(tstar, a1, color='blue', linestyle='solid', linewidth=2, 
           label='$\eta_4 = 0.1$')
 
-eta1, eta3, eta4 = 1, 1, 1
+#eta1, eta3, eta4 = 1, 1, 1
 kernel2 = kernels.Periodic(eta1, eta3, eta4)
 tedibear2 = process.GP(kernel2, mean, time, val1, val1err)
 a2 = tedibear2.sample(kernel2, tstar)
 plt.plot(tstar, a2, color='red', linestyle='dashed', linewidth=2, 
           label='$\eta_4 = 1$')
 
-eta1, eta3, eta4 = 1, 1, 10
+#eta1, eta3, eta4 = 1, 1, 10
 kernel3 = kernels.Periodic(eta1, eta3, eta4)
 tedibear3 = process.GP(kernel3, mean, time, val1, val1err)
 a3 = tedibear3.sample(kernel3, tstar)
@@ -47,3 +47,4 @@ plt.ylabel('Output')
 plt.xlabel('Input')
 plt.legend(facecolor='whitesmoke', framealpha=1, edgecolor='black')
 plt.savefig('samplesPerKernel.pdf', bbox_inches='tight')
+plt.show()
