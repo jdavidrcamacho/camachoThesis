@@ -31,3 +31,17 @@ determine that the Gaussian process regression network shown to be sensitive to
 the stellar activity level presenting better results on more active stars. These results
 were also crucial to conclude that, even considering its limitations, the regression
 network obtains results similar to other time series modelling methods.
+
+
+### Cite
+
+If you use this thesis in your work, please cite the following publication
+```bibtex
+@PHDTHESIS{Camacho2022_phd,
+       author = {{Camacho}, Jo{\~a}o David Ribeiro},
+       title = "{Advanced Statistical Data Analysis Methods for the Detection of Other Earths}",
+       school = {University of Porto, Portugal},
+       year = 2022,
+       month = jun,
+}
+```
